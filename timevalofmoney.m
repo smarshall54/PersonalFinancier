@@ -1,23 +1,28 @@
 clear all
 
 % input variables
+
+stopval = 500000;
+
 % have to assume these are loans for now... build in asset functionality
 % next
-principal1 = -10000;
-rate1 = 0.07; % always as a decimal fraction
+principal1 = -12000;
+rate1 = 0.025; % always as a decimal fraction
 
-principal2 = -17496;
-rate2 = 0.057;
+principal2 = -27496;
+rate2 = 0.0655;
 
 
+value1 = 66000; % initial asset value
+ror1 = 0.06; % asset rate of return
 
-payment = 50; % monthly payment you wish to make
-invpay = 50; % set a monthly amount if you want to invest right away instead
+payment = 4900; % monthly payment you wish to make
+invpay = 2200; % set a monthly amount if you want to invest right away instead
             % of placing 100% of available 'payment' into debts.
             % if 0, the program assumes all extra payment goes to debt
             % repayment first.
 n = 12; % 12 months in a year
-horizon = 10; % maximum number of years you want to pay off any loan
+horizon = 6; % maximum number of years you want to pay off any loan
 
 
 % need an infinite loop check - is your min payment enough to EVER pay it
@@ -59,9 +64,8 @@ clear presval2
 clear asset1
 presval1(1) = principal1;
 presval2(1) = principal2;
-asset1(1) = 0;
-networth(1) = principal1+principal2;
-stopval = 10000;
+asset1(1) = value1;
+networth(1) = principal1+principal2+value1;
 period = 0; % initial period
 t=1; % # of periods per cycle of while loop
 
@@ -96,8 +100,9 @@ while networth(period+1) < stopval
         
         finpay2 = -presval2(period+1);
         presval2(period+2) = presval2(period+1)+finpay2;
-        if presval1(period+2)~=0
+        if presval2(period+2)~=0
             disp('borked some finpay2 math.')
+            disp(period)
         end
         
         payment1=payment1+payment2;
@@ -117,7 +122,8 @@ while networth(period+1) < stopval
     end
     
     % asset 1
-        asset1(period+2) = asset1(period+1)+invpay+(payment-(payment1+payment2));
+        asset1(period+2) = asset1(period+1)+(payment-(payment1+payment2));
+        asset1(period+2) = asset1(period+2)*(1+ror1/n)^t;
     
     
     networth(period+2) = presval2(period+2)+presval1(period+2)+asset1(period+2);
@@ -130,5 +136,5 @@ hold on
 plot(presval1,'LineStyle','--')
 hold on
 plot(presval2,'LineStyle','--')
-plot(asset1,'LineStyle','-.')
-plot(networth)
+plot(asset1,'LineStyle',':')
+plot(networth,'LineStyle','-')
