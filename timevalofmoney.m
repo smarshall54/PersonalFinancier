@@ -1,5 +1,17 @@
 clear all
 
+%
+% upcoming work: 
+% 1. functionalize the code to support arbitrary # of loans/assets
+% 2. calculate debt payoff timeline
+% 3. support adding loans or assets and spending savings @ user-defined
+% time points (e.g. house purchase or inheritance)
+% 4. support payment inflation (due to salary raises)
+% 5. support tax-deferred assets, salary tax estimates
+% 6. build a gui
+%
+
+
 % input variables
 
 stopval = 500000;
