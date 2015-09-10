@@ -21,7 +21,7 @@ stopval = 500000;
 liab = [-12000, 0.025; -27496, 0.0655; -1725, 0.08;-5274,0.0655];
 asset = [66000,0.06];
 
-payment = 4900; % monthly payment you wish to make
+cashflow = 4900; % monthly payment you wish to make
 invpay = 2200; % set a monthly amount if you want to invest right away instead
             % of placing 100% of available 'payment' into debts.
             % if 0, the program assumes all extra payment goes to debt
@@ -37,17 +37,10 @@ minpay(i) = (-liab(i,1)*(liab(i,2)/n))/(1-(1+liab(i,2)/n)^(-n*horizon));
 end
 minpaytot = sum(minpay(:));
 
-while payment-invpay < minpaytot
-    payment = input(['Your min payment is too small! Increase it to at least ' num2str(ceil(minpaytot)+invpay) ': ']);
+while cashflow-invpay < minpaytot
+    cashflow = input(['Your cashflow is too small! Increase it to at least ' num2str(ceil(minpaytot)+invpay) ': ']);
 end
 %
-
-% determine any extra amount of money beyond the minimums
-if payment > minpaytot
-    extra = payment-invpay-minpaytot;
-else
-    extra = 0;
-end
 
 % allocate the extra money to the right loan
 
@@ -59,7 +52,7 @@ clear presval2
 clear asset1
 curliab = liab(:,1);
 curasset = asset(:,1);
-networth = sum(curliab(:),curasset(:));
+networth = sum(curliab(:))+curasset(:);
 period = 0; % initial period
 t=1; % # of periods per cycle of while loop
 
@@ -68,20 +61,26 @@ while networth(period+1) < stopval
     %% Determine Pay Order
     %% Determine Payment Amounts
         % include final pmt check
-        
+ 
+% determine any extra amount of money beyond the minimums
+if cashflow > minpaytot
+    extra = cashflow-invpay-minpaytot;
+else
+    extra = 0;
+end
         
         for i=1:1:length(curliab(:,period+1))
             if curliab(payorder(i),period+1) ~= 0
                 if extra ~= 0;
-                    if curliab(payorder(i),period+1) >= minpay(payorder(i))+extra
+                    if -curliab(payorder(i),period+1) >= minpay(payorder(i))+extra
                         payment(payorder(i)) = minpay(payorder(i))+extra;
                         extra = 0;
-                    elseif curliab(payorder(i),period+1) < minpay(payorder(i))
-                        payment(payorder(i)) = curliab(payorder(i),period+1);
+                    elseif -curliab(payorder(i),period+1) < minpay(payorder(i))
+                        payment(payorder(i)) = -curliab(payorder(i),period+1);
                         extra = extra + (minpay(payorder(i)) - payment(payorder(i)));
-                    elseif curliab(payorder(i),period+1) < minpay(payorder(i))+extra
-                        payment(payorder(i)) = curliab(payorder(i),period+1);
-                        extra = (extra+minpay(payorder(i)))-curliab(payorder(i));
+                    elseif -curliab(payorder(i),period+1) < minpay(payorder(i))+extra
+                        payment(payorder(i)) = -curliab(payorder(i),period+1);
+                        extra = (extra+minpay(payorder(i)))-(-curliab(payorder(i),period+1));
                     else
                         error('out of bounds')
                     end
@@ -106,7 +105,7 @@ while networth(period+1) < stopval
         
     %% calculate networth
     
-    networth(period+2) = sum([curliab(:,period+2);curasset(period+2)]);
+    networth(period+2) = sum(curliab(:,period+2))+curasset(period+2);
     
     %% increment time
     period = period+1;
