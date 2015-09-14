@@ -4,7 +4,7 @@ clear all
 % upcoming work: 
 % 0. support arbitrary # of loans/assets [XX]
 % 1. functionalize/OO the code to clean it up!
-% 2. calculate debt payoff timeline
+% 2. calculate debt payoff timeline [XX]
 % 3. support adding loans or assets and spending savings @ user-defined
 %   time points (e.g. house purchase or inheritance) [XX]
 % 4. support payment inflation (due to salary raises)
