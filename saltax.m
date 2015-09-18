@@ -32,12 +32,18 @@
 %           HOH/QW - 200k
 %
 % previous data for SS tax maximums:
-[2015 118500; 2014 117000; 2013 113700; 2012 110100; 2011 106800; 2009 106800; 2008 102000]
+%[2015 118500; 2014 117000; 2013 113700; 2012 110100; 2011 106800; 2009 106800; 2008 102000]
 
 
 tb = [9225,0.01;37450,0.15;90750,.25;189300,.28;411500,.33;413200,.25;inf,.396];
 
 salary = 90000;
+401k_contrib = 18000;
+401k_match = 0.05
+HSAcontrib = 3300;
+IRAcontrib = 5500;
+IRAtype = 'roth'; % alternative = 'trad'
+
 rem = salary;
 grosspay = salary
 while rem>0
