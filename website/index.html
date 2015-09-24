@@ -1,13 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>This is my page.</title>
+	<title>aimFIRE - an accurate FIRE projector</title>
 	<script type="text/javascript" src="scripts/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="scripts/index.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles/index.css"/>
 
 </head>
 <body>
-	<div>Body text.</div>
+	
+	<div><h1>aimFIRE</h1></div>
+	<div>
+		<h2>Enter your FIRE stats below:</h2>
+		<div>Your target portfolio value: $
+		<input type="number" value=500000 id="targetValue" class="userStats"> </div>
+		<div>Your safe withdrawal rate: <input type="number" value=4 id="safeWithdrawRate" class="userStats">%</div>
+		<div id="loans" class="userStats">Your current debts:
+			<div class="fieldLabel">Name </div><div class="fieldLabel">Principal </div><div class="fieldLabel">Rate </div><div class="fieldLabel">StartDate </div><div class="fieldLabel">Min Payment </div>
+
+			<!-- the follow is an example of a full loan input to be deleted later --
+			<div id="loan1">
+				<input type="text" value="Loan 1" id="loan1Name" class="userStats">
+				<input type="number" value=0 id="loan1Principal" class="userStats">
+				<input type="number" value=0 id="loan1Rate" class="userStats">
+				<input type="number" value=0 id="loan1Date" class="userStats">
+				<input type="number" value=0 id="loan1minPay" class="userStats">
+			</div>
+
+			!-- done w. example -->
+			<div><button id="addLoan">+Add Loan</button></div>
+
+		</div>
+
+		<div id="assets" class="userStats">Your current assets:</div>
+			<div><button id="addAsset">+Add Asset</button></div>
+		<div id="cashflow" class="userStats">Your monthly cashflow:</div>
+			<input type="number" value=4000 id="targetValue" class="userStats">
+		<div id="expenses" class="userStats">Your monthly expenses:</div>
+			<input type="number" value=2000 id="targetValue" class="userStats">
+	</div>
 </body>
 </html>

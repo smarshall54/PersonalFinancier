@@ -1,6 +1,13 @@
-div {
+* {
 	font-family: Helvetica,sans-serif;
-	color: blue;
-	font-size: 2em;
+}
 
+h1 {
+	font-family: Helvetica,sans-serif;
+	color: red;
+	font-size: 2em;
+}
+
+.fieldLabel {
+	display: table-cell;
 }
