@@ -80,8 +80,39 @@ function addLoanField(){
 	var newLoanId = 'loan'+nloans;
 	var newLoanValue = 'Loan '+nloans;
 	
+	// instead of this huge string, create a method under the finObj() called "createInputFields"
+	// 		will also need "destroyInputFields" and "readInputFields"
+	// function addLoanField should create a finObj that then creates its own fields and reads them in
+	var $loanFields = '<div id="'+newLoanId+'">'+'<input type="text" value="'+newLoanValue+'" id="'+newLoanId+'"Name" class="userStats"><input type="number" value=0 id="'+newLoanId+'Principal" class="userStats"><input type="number" value=0 id="'+newLoanId+'Rate" class="userStats"><input type="number" value=0 id="'+newLoanId+'Date" class="userStats"><input type="number" value=0 id="'+newLoanId+'MinPay" class="userStats"></div>';
 
-	var $loanFields = '<div id="'+newLoanId+'">'+'<input type="text" value="'+newLoanValue+'" id="loan1Name" class="userStats"><input type="number" value=0 id="'+newLoanId+'Principal" class="userStats"><input type="number" value=0 id="'+newLoanId+'Rate" class="userStats"><input type="number" value=0 id="'+newLoanId+'Date" class="userStats"><input type="number" value=0 id="'+newLoanId+'minPay" class="userStats"></div>';
+	// loan property field names
+	// Name
+	// Principal
+	// Rate
+	// Date
+	// MinPay
+	var propNames = ["Name","Principal","Rate","Date","MinPay"];
+	
+
+	// make an array of all the loan field IDs so we can use it later
+	// to iterate over to collect all of the input values by ID
+	var loanFieldNames = [];
+	var loanFieldRow = [];
+
+	console.log("nloans = "+nloans);
+	for (var y = 0; y<=nloans; y++){
+		
+
+		for (var x = 0; x<propNames.length; x++){
+
+			loanFieldRow[x] = newLoanId+propNames[x];
+		}
+
+		loanFieldNames[y] = loanFieldRow;
+	}
+
+	console.log(loanFieldNames[1]);
+
 
 	$('#loans').append($loanFields);
 
@@ -95,6 +126,10 @@ function destroyLoanField(){
 function parseData(){
 	// reads in all of the data entered by the user
 	// and creates necessary financial objects
+	console.log('parsing data...');
+	var userData = document.getElementsByTagName("div");
+	console.log(userData.length);	
+
 };
 
 
@@ -111,6 +146,8 @@ $(document).ready(function(){
 	$('#addLoan').click(addLoanField);
 	
 	$('#addAsset').click(addLoanField);
+
+	$('#calculate').click(parseData);
 
   var firstObj = new finObj();
   firstObj.name="betterName";
