@@ -1,0 +1,70 @@
+Code Projects and Components
+
+
+1. Personal Financier (financ.io ???)
+	A. NetWorth Projector
+		a. HTML dynamic form
+		b. javascript math engine
+		c. javascript graphing
+		d. interactive graph
+	B. PaycheckSplitter
+		a. HTML dynamic form
+		b. math to determine tax estimate
+		c. real-time updating pie chart
+		d. provide new inputs to NetWorth Projector
+	C. MarketSim
+		a. apply historical growth data to iterations in NetWorth Projector
+		b. statistical data output and histogram plotting
+
+2. Human Performance Tracker  (huge megaproj)
+	A.
+	B.
+	C.
+	D.
+	E.
+
+3. BarCap
+	A. Reads Accelerometer Data
+		a. from Phone
+			i. create a development app on the phone
+			ii. access accel. data
+		b. from external device
+			i. bluetooth communication protocol
+	B. Lift tracking algorithm
+		a. interprets accel/gyro/gravity data
+		b. displays a graph of the bar path during the lift
+		c. rep-detection algorithm
+			i. pattern recognition concepts
+	C. Technique Helper
+		a. uses interpreted lift data to:
+			i. warn when lift uniformity deviates substantially during a multi-rep set
+			ii. warn when lift pattern is significantly mismatched to historical reps
+			iii. ** advise on specific technique errors due to bar path!
+	D. Lift Sim
+		a. allows user to input their own body dimensions
+		b. animates the lift by forcing the captured bar path onto the lifter's wireframe
+		c. calculates work done on each muscle group using bar path, speed, accel, bar weight, and user anthropometry data as inputs (including joint insertions!)
+
+
+
+
+4. HTML canvas practice
+	A. create a simple web page that draws and animates elements on an HTML5 canvas
+	B. users can draw lines on the canvas
+		a. can the program recognize a line "object" and simply delete the last thing drawn with an "undo" feature? this would feed directly into project 6, recognizing user-created entities with irregular shape.
+5. simple javascript game using HTML5 canvas to draw
+	A. simple side-scroller
+		i. coding exercise to practice keyboard input and the Game Loop concept.
+	B. physics demo of boxes falling and colliding
+		i. requires coding a simple 2d physics engine.
+6. more complex physics sandbox in JS
+	A. a js game to emulate bone joints.
+		* empty canvas. user can click and drag anywhere to draw/create a rigid object of any shape.
+		* gravity applies. the shape has mass depending on the length of its outline.
+		* after drawing, shape drops to the ground.
+		* user can then click anywhere on the line to create a rotating joint.
+		* user can then click on the joint to start drawing a new shape/line attached to it. (joint can have a friction property!)
+		* once 2nd shape is complete, it falls to ground but it is constrained by its attachment to the joint.
+		* user can attach an "elastic" to any point on a shape, and attach the other end to a point on any other shape (elastic can have varying strength)
+		* user can click a button to "trigger" all elastics and have them pull on the shapes with a specified amount of force.
+		* ADDL - user can grab parts of the objects and position them, then let go and have them snap back into place.

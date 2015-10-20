@@ -1,0 +1,154 @@
+Business Questions
+--------------------
+Should I set up an LLC?
+	- legalzoom?
+Proper licensing of code I generate?
+licensing and copyright implications of hosting code on github?
+
+Market Research
+	how to start? 
+	competitors in the fitness hardware/software space?
+	how to write a business plan for a start up
+	current research in companies like fitbit, android wearables, apple watch
+	entrepreneurship 101?
+
+
+---------------------
+App Ideas!
+
+1. HumanPerformanceTracker - Training Avatar game
+2. PersonalFinancier
+3. MFP personal trainer app
+	auto-updates your calorie target based on running-average weight and training performance
+	allows personal trainer intervention
+	allows pre-planned meals
+	creates widget displaying:
+		total daily calories
+		cals remaining
+		protein remaining (and carbs/fat?)
+4. BarCap
+	* accelerometer/gyro/BTLE packaged with a magnet that can be stuck on a barbell and give you feedback about barpath, speed, etc. packaging has a centroid marking so it can be integrated with videos of your lifting for video-based bar tracking. have a remote "start record" button to start the video!
+	* could be sold with a phone camera tripod
+	* would be a good kickstarter candidate since you could 3-d print up a prototype to show something
+	* could actually be sold to FitBit - testing performance on wrist vs. bar would be interesting
+	* look at fitbit teardowns for part suggestions
+5. Bodymonitor Kits
+	*  low cost, low-intrusion blood-pressure monitor (wearable while lifting?)
+	*  low cost blood profile monitoring (cholesterol and triglycerides)
+	*  at-home blood lactate testing
+6. full body accelerometer suit
+	accels on both sides of all joints to record motion during any activity
+
+
+7. company idea: CustomStack
+	*  users put in their desired supplement stack
+	*  CustomStack orders bulk supplement powders and has them mixed in custom proportions, then packs them into capsules which are mailed to the user. saves the user from taking umpteen pills per day, can order different stacks for different times of day, no longer worry about filling pills, dosage, etc.
+	* need to find a company that does pill-filling of supplement powders.
+
+
+-----------------------
+
+topics involved:
+	javascript/css/html web-app design
+	website hosting/design
+	android sdk (java) app development
+	board design, pcb layout and fabrication
+	3d modeling design
+	prototype 3d printing
+
+	wearable biotech
+		blood glucose
+			Noninvasive Optical Coherence Tomography
+		blood lactate
+		VO2 max testing
+		testosterone
+		blood pressure
+
+-----------------------
+
+lead-up topics
+
+1. code a js game to emulate bone joints.
+	* empty canvas. user can click and drag anywhere to draw/create a rigid object of any shape.
+	* gravity applies. the shape has mass depending on the length of its outline.
+	* after drawing, shape drops to the ground.
+	* user can then click anywhere on the line to create a rotating joint.
+	* user can then click on the joint to start drawing a new shape/line attached to it. (joint can have a friction property!)
+	* once 2nd shape is complete, it falls to ground but it is constrained by its attachment to the joint.
+	* user can attach an "elastic" to any point on a shape, and attach the other end to a point on any other shape (elastic can have varying strength)
+	* user can click a button to "trigger" all elastics and have them pull on the shapes with a specified amount of force.
+	* ADDL - user can grab parts of the objects and position them, then let go and have them snap back into place.
+
+2. learn about phone development.
+	code an app on my phone that queries the sensors
+
+3. characterize my phone's sensors.
+	quick experiment: attach phone to barbell. start recording accelerometers and perform a lift. save data into matlab. try to integrate for position and see if i can generate a plot of the bar path.
+
+4. subjects to learn
+	1. DSP
+	2. pattern recognition
+		algorithms for detecting motions on the phone accels.
+	3. JS coding
+		to get web-app prototypes running
+	4. startup school
+		stanford lectures
+		MIT class on business plan
+		market analysis
+	5. custom PCB!
+
+
+5. arduino + zigbee prototype device? even smaller accelerometer?
+
+6. tiny hardware prototype
+	tiny li-ion, low power BT chip, low power accel/grav/gyro sensor, small uC to send data
+
+7. Business Plan write-up
+	- follow MIT course for creating a business plan outline
+	- market research
+		Target Markets for Growth:
+			SMALL: (once we get raw/basic data collection)
+				- S&C coaches w. low budget, crossfit gyms
+			MEDIUM: (once we get more advanced processing)
+				- individual athletes especially crossfit
+			LARGE: (once we have training Guidance algorithms)
+				- all strength athletes.
+		Competing Products
+			- Linear Transducers e.g. kinetic GymAware, Tendo power
+				- expensive, meant for serious gyms
+				- large and bulky, not easy to use for EVERY lift, EVERY session
+				- probably very accurate and low noise
+				- sophisticated analysis software
+			- Fitbit
+				- cheap
+				- doesnt do lift analysis
+				- but they are nearly identical hardware to what we need to build
+				- less sophisticated interface
+				- target market is not hardcore athletes
+			- HRMs/GPS watches
+				- users have limited $ and will choose between lift monitoring and HRM/GPS
+			- cell phones themselves (can replace hardware if someone just codes an app), although not as easy to use.
+
+
+
+ULTRAFUTURE
+	- wireless body sensor networks to determine joint position in real time
+	- noninvasive muscle EMG for real-time muscle contraction data
+
+
+
+
+
+OK So this is my curricula for what I have to learn. How do I synergize this with my desired daily tasks?
+
+1. Training
+	Self experiment. Data log as much as possible. Keep meticulous records. * Add datalogging as I get more advanced metrics running.
+		1. cardio
+			heart rate, stroke rate
+		2. lifting
+			RPE, accelerometer data
+		3. bodyweight
+		4. nutrition
+		5. rock climbing
+			track # and density of routes climbed
+	* Implement code to track fitness.
