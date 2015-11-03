@@ -23,7 +23,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2211,
+				"buffer_size": 2226,
 				"line_ending": "Windows"
 			}
 		},
@@ -39,7 +39,7 @@
 			"file": "styles/index.css",
 			"settings":
 			{
-				"buffer_size": 374,
+				"buffer_size": 405,
 				"line_ending": "Windows",
 				"name": "div {"
 			}
@@ -201,7 +201,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -209,15 +209,15 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 2211,
+						"buffer_size": 2226,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								563,
-								579
+								324,
+								324
 							]
 						],
 						"settings":
@@ -243,8 +243,8 @@
 						"selection":
 						[
 							[
-								6165,
-								6165
+								1529,
+								1529
 							]
 						],
 						"settings":
@@ -254,7 +254,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2589.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -264,15 +264,15 @@
 					"file": "styles/index.css",
 					"settings":
 					{
-						"buffer_size": 374,
+						"buffer_size": 405,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								284,
-								284
+								405,
+								405
 							]
 						],
 						"settings":
