@@ -1,5 +1,7 @@
 * {
 	font-family: Helvetica,sans-serif;
+	color: #11CCAA;
+	background-color: #333333;
 }
 
 h1 {
@@ -10,4 +12,16 @@ h1 {
 
 .fieldLabel {
 	display: table-cell;
+}
+
+input {
+	background-color: #555555;
+	border: 1px solid #888888;
+	border-radius: 5px;
+}
+
+button {
+	background-color: black;
+	border: 1px solid #888888;
+	border-radius: 5px;
 }

@@ -3,6 +3,18 @@
 	{
 		"selected_items":
 		[
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"MinPay",
+				"MinPay"
+			],
+			[
+				"loanField",
+				"loanField"
+			]
 		]
 	},
 	"buffers":
@@ -11,7 +23,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 255,
+				"buffer_size": 2211,
 				"line_ending": "Windows"
 			}
 		},
@@ -19,7 +31,7 @@
 			"file": "scripts/index.js",
 			"settings":
 			{
-				"buffer_size": 61,
+				"buffer_size": 9044,
 				"line_ending": "Windows"
 			}
 		},
@@ -27,20 +39,38 @@
 			"file": "styles/index.css",
 			"settings":
 			{
-				"buffer_size": 75,
+				"buffer_size": 374,
 				"line_ending": "Windows",
 				"name": "div {"
+			}
+		},
+		{
+			"file": "scripts/Business Questions",
+			"settings":
+			{
+				"buffer_size": 5991,
+				"line_ending": "Windows",
+				"name": "Business Questions"
+			}
+		},
+		{
+			"file": "scripts/Code Projects and Components",
+			"settings":
+			{
+				"buffer_size": 3100,
+				"line_ending": "Windows",
+				"name": "Code Projects and Components"
 			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 360.0,
+		"height": 392.0,
 		"selected_items":
 		[
 		],
-		"width": 392.0
+		"width": 416.0
 	},
 	"console":
 	{
@@ -138,7 +168,7 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 95.0
 	},
 	"find_in_files":
 	{
@@ -149,9 +179,10 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"class=\"userStats\""
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -159,6 +190,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"tag=\"userStats\""
 		],
 		"reverse": false,
 		"show_context": true,
@@ -169,7 +201,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -177,20 +209,21 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 255,
+						"buffer_size": 2211,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								135,
-								135
+								563,
+								579
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -203,24 +236,25 @@
 					"file": "scripts/index.js",
 					"settings":
 					{
-						"buffer_size": 61,
+						"buffer_size": 9044,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								61,
-								61
+								6165,
+								6165
 							]
 						],
 						"settings":
 						{
 							"auto_name": "",
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2589.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -230,24 +264,81 @@
 					"file": "styles/index.css",
 					"settings":
 					{
-						"buffer_size": 75,
+						"buffer_size": 374,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								72,
-								72
+								284,
+								284
 							]
 						],
 						"settings":
 						{
 							"auto_name": "div {",
-							"syntax": "Packages/CSS/CSS.tmLanguage"
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/Business Questions",
+					"settings":
+					{
+						"buffer_size": 5991,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3515,
+								2576
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Business Questions",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 884.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "scripts/Code Projects and Components",
+					"settings":
+					{
+						"buffer_size": 3100,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								270,
+								270
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Code Projects and Components",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 117.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -288,7 +379,7 @@
 	"menu_visible": true,
 	"replace":
 	{
-		"height": 0.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -311,6 +402,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 200.0,
 	"status_bar_visible": true
 }

@@ -1,4 +1,10 @@
-	function finObj(type,name,target,startValue,rate,startDate,minPay,payDate){
+/*********************************************************************************************************
+*
+*		FINANCIAL OBJECT
+*
+**********************************************************************************************************/
+
+	function FinObj(type,name,target,startValue,rate,startDate,minPay,payDate){
 		
 		//"asset", "withdrawal", "windfall"
 		this.type = "loan";
@@ -53,85 +59,218 @@
 		this.compound = function(){}; 
 	};
 
-function addLoanField(){
-	// creates a new set of text fields for a user to enter loan parameters.
-	
-	// simple test case
-	console.log("adding loan field");
-	//var $loanField = '<input type="text" value="Loan 1" id="loan1" class="userStats">';
-	//$('#loans').append($loanField);
+/*********************************************************************************************************
+*
+*		DYNAMIC FORM MODIFICATION
+*
+**********************************************************************************************************/
 
-	// true code:
-	// must go through all previous loan elements and determine the number/id of current loan
-	// and then modify the DOM element string to have different values
-	// ------
-	var loanElem = document.getElementById('loans');
-	
-	// counts the # of direct child elements of 'loans' to know how many were already made
+function addLoanField(balanceType){
+	// creates a new set of text fields for a user to enter loan parameters.
+
+
 	var nloans = 0;
-	for (var i=0; i<loanElem.childNodes.length;i++){
-		var node = loanElem.childNodes[i];
-		if (node.nodeType == Node.ELEMENT_NODE && node.nodeName == 'DIV' && node.id == 'loan'+nloans){
-			nloans++;
-		}
+	var nassets = 0;
+	// input validation
+	// only 2 valid inputs: "loan" and "asset"
+	if (balanceType==='loan') {
+		var ntrack = nloans;
+		console.log('detected loan type')
+
+	} else if (balanceType==='asset'){
+		var ntrack = nassets;
+		console.log('detected asset type')
+	} else {
+		console.log('choose loan or asset to add.')
+		return;
 	}
+	
+	ntrack = countBalances(balanceType);
 
 	// names the new loan based on # of existing loans
-	var newLoanId = 'loan'+nloans;
-	var newLoanValue = 'Loan '+nloans;
+	var newLoanId = balanceType+ntrack;
+	var newLoanValue = balanceType+' '+ntrack;
 	
 	// instead of this huge string, create a method under the finObj() called "createInputFields"
 	// 		will also need "destroyInputFields" and "readInputFields"
 	// function addLoanField should create a finObj that then creates its own fields and reads them in
-	var $loanFields = '<div id="'+newLoanId+'">'+'<input type="text" value="'+newLoanValue+'" id="'+newLoanId+'"Name" class="userStats"><input type="number" value=0 id="'+newLoanId+'Principal" class="userStats"><input type="number" value=0 id="'+newLoanId+'Rate" class="userStats"><input type="number" value=0 id="'+newLoanId+'Date" class="userStats"><input type="number" value=0 id="'+newLoanId+'MinPay" class="userStats"></div>';
+	var $loanFields = '<tr id="'+newLoanId+'"><div id="'+newLoanId+'">'+'<td><input type="text" value="'+newLoanValue+'" id="'+newLoanId+'"Name" class="userStats"></td><td><input type="number" value=0 id="'+newLoanId+'Principal" class="userStats"></td><td><input type="number" value=0 id="'+newLoanId+'Rate" class="userStats"></td><td><input type="number" value=0 id="'+newLoanId+'Date" class="userStats"></td><td><input type="number" value=0 id="'+newLoanId+'MinPay" class="userStats"></td></div></tr>';
 
+
+	$('#'+balanceType+'Table').append($loanFields);
+
+	if (balanceType=='loan') {
+		nloans = ntrack;
+
+	} else if (balanceType=='asset'){
+		nloans = ntrack;
+	} else {
+		console.log('choose loan or asset to add.')
+		return;
+	}
+
+};
+
+function destroyLoanField(balanceType){
+	// removes the last set of text fields created by the user
+
+	var nloans = 0;
+	var nassets = 0;
+	// input validation
+	// only 2 valid inputs: "loan" and "asset"
+	if (balanceType==='loan') {
+		var ntrack = nloans;
+		console.log('detected loan type')
+
+	} else if (balanceType==='asset'){
+		var ntrack = nassets;
+		console.log('detected asset type')
+	} else {
+		console.log('choose loan or asset to destroy.')
+		return;
+	}
+
+	ntrack = countBalances(balanceType);
+
+	ntrack--;
+
+	// names the new loan based on # of existing loans
+	var newLoanId = balanceType+ntrack;
+
+	$("table#"+balanceType+"Table tr#"+newLoanId+"").empty();
+	$("table#"+balanceType+"Table tr#"+newLoanId+"").remove();
+
+};
+
+/*********************************************************************************************************
+*
+*		SUBROUTINES
+*
+**********************************************************************************************************/
+
+function countBalances(balanceType){
+		// must go through all previous loan elements and determine the number/id of current loan
+		// and then modify the DOM element string to have different values
+
+		var ntrack = 0;
+		var loanElem = document.getElementById(balanceType+'Table').getElementsByTagName("tbody")[0];
+	
+	// counts the # of direct child elements of 'balanceType' to know how many were already made
+	// FUNCTIONALIZE into "countBalances" since it is used here and in addLoanField()
+
+	for (var i=0; i<loanElem.childNodes.length;i++){
+		var node = loanElem.childNodes[i];
+		if (node.nodeType == Node.ELEMENT_NODE && node.nodeName == 'TR' && node.id == balanceType+ntrack){
+			ntrack++;
+		};
+	};
+
+	return ntrack;
+ 
+};
+
+function nameBalances(balanceType,ntrack){
+	// reads in all balances of type balanceType. ntrack tells how many of each type there are.
+	// returns [  ***************  ]
+
+	// generate array of loan names
 	// loan property field names
-	// Name
-	// Principal
-	// Rate
-	// Date
-	// MinPay
+	// Name // Principal // Rate // Date // MinPay
 	var propNames = ["Name","Principal","Rate","Date","MinPay"];
 	
-
 	// make an array of all the loan field IDs so we can use it later
 	// to iterate over to collect all of the input values by ID
 	var loanFieldNames = [];
 	var loanFieldRow = [];
 
-	console.log("nloans = "+nloans);
-	for (var y = 0; y<=nloans; y++){
+	for (var y = 0; y<ntrack; y++){
 		
-
+		console.log(y)
 		for (var x = 0; x<propNames.length; x++){
 
-			loanFieldRow[x] = newLoanId+propNames[x];
-		}
+			loanFieldRow[x] = balanceType+y+propNames[x];
 
+			// console.log(loanFieldRow[x]);
+		};
+		console.log('loanFieldRow');
+		console.log(loanFieldRow);
 		loanFieldNames[y] = loanFieldRow;
-	}
+		console.log(loanFieldNames[y]);
+	};
 
-	console.log(loanFieldNames[1]);
+	console.log('loanFieldNames');
+	console.log(loanFieldNames);
 
-
-	$('#loans').append($loanFields);
+	return loanFieldNames;
 
 };
 
-function destroyLoanField(){
-	// removes the last set of text fields created by the user
+/*********************************************************************************************************
+*
+*		FORM SUBMISSION
+*
+**********************************************************************************************************/
+
+function masterCalculate() {
+
+// first parse the form
+var userData = parseData();
+
+// calculate the results
+
+// draw the graph
 
 };
 
 function parseData(){
 	// reads in all of the data entered by the user
 	// and creates necessary financial objects
+	// Returns all of the user's Financial stats
 	console.log('parsing data...');
 	var userData = document.getElementsByTagName("div");
 	console.log(userData.length);	
 
+	targetValue = document.getElementById("targetValue").value;
+	swr = document.getElementById("safeWithdrawRate").value;
+	console.log('target portfolio value = '+targetValue);
+
+	/*
+	// get all inputs on the page (tag userStats)
+
+	inputs = document.getElementsByTagName("userStats");
+
+	// iterate over all the elements
+
+	for (var i=0;i<inputs.length;i++){
+	
+	};
+
+	*/
+
+	assets = nameBalances('asset',countBalances('asset'));
+	loans = nameBalances('loan',countBalances('loan'));
+
+	console.log('assets array');
+	console.log(assets);
+
+	userData = "boogity";
+	return userData;
+
 };
 
+function calcTimeseries(UserStats){
+	// takes a UserStats object as the input containing a user's complete financial info
+	// returns time-series data for user's networth vs. month
+	var networth = [1000, 2000, 3000, 4000, 5000];
+
+	return networth;
+};
+
+/*********************************************************************************************************
+*
+*		DOCUMENT ONLOAD
+*
+**********************************************************************************************************/
 
 $(document).ready(function(){
 	
@@ -139,17 +278,25 @@ $(document).ready(function(){
 	$('h1').mouseover(function(){
 		$(this).fadeOut('slow');
 	});
-	$('div').mouseleave(function(){
+	$('h1').mouseleave(function(){
 		$(this).fadeIn('slow');
 	});
 	
-	$('#addLoan').click(addLoanField);
+
+	// need to wrap a function in an anonymous function
+	// if it has parameters, otherwise it will execute
+	// the function on page load!
+	$('#addLoan').click(function(){addLoanField('loan');});
 	
-	$('#addAsset').click(addLoanField);
+	$('#addAsset').click(function(){addLoanField('asset');});
+	
+	$('#destroyLoan').click(function(){destroyLoanField('loan');});
+	
+	$('#destroyAsset').click(function(){destroyLoanField('asset');});
 
-	$('#calculate').click(parseData);
+	$('#calculate').click(masterCalculate);
 
-  var firstObj = new finObj();
+  var firstObj = new FinObj();
   firstObj.name="betterName";
   console.log(firstObj.name);
 });
