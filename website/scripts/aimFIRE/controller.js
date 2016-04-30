@@ -6,7 +6,7 @@
 
 $(document).ready(function(){
 	
-// just some fuckery to see if the doc loaded properly.
+	// just some fuckery to see if the doc loaded properly.
 	$('h1').mouseover(function(){
 		$(this).fadeOut('slow');
 	});
@@ -28,9 +28,9 @@ $(document).ready(function(){
 
 	$('#calculate').click(masterCalculate);
 
-  var firstObj = new FinObj();
-  firstObj.name="betterName";
-  console.log(firstObj.name);
+  	var firstObj = new FinObj();
+  	firstObj.name="betterName";
+  	console.log(firstObj.name);
 });
 
 /*********************************************************************************************************
@@ -44,18 +44,19 @@ $(document).ready(function(){
 
 function masterCalculate() {
 
-// first parse the form
-var userData = parseData();
+	// first parse the form
+	var userData = parseData();
 
-console.log('The Users data is:')
-console.log(userData)
+	console.log('The Users data is:')
+	console.log(userData)
 
-// calculate the results
+	// calculate the results
 
-var results = calcTimeseries(userData);
+	var results = calcTimeseries(userData);
 
-// draw the graph
+	// draw the graph
 
-drawGraph(results);
+	drawGraph(results);
+	printResults(results);
 
 };

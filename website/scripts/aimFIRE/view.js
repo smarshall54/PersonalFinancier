@@ -111,11 +111,14 @@ function countBalances(balanceType){
 
 // "VIEW" element
 
-function printResults(){
+function printResults(results){
+	//console.log(results);
+	document.getElementById("printPane").innerHTML = results;
 
 };
 
 
 function drawGraph(results){
-	console.log('I should be drawing a graph now.')
+	//console.log('I should be drawing a graph now.');
+	document.getElementById("graphPane").innerHTML = 'This Should be a Graph!';
 };
