@@ -7,3 +7,24 @@
 #titleLine {
 	height: 50px;
 }
+
+#resultsPane {
+	padding: 10px;
+	border: 2px solid black;
+	border-radius: 5px;
+}
+
+#printPane{
+	height: 100px;
+	margin: 20px;
+	border: 1px solid gray;
+	border-radius: 5px;
+}
+
+#graphPane {
+	height: 400px;
+	margin: 20px;
+	border: 1px solid gray;
+	border-radius: 5px;
+	text-align: center;
+}
