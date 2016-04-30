@@ -5,7 +5,7 @@
 "MODEL" element - it is doing form validation, formatting it for the algorithm, and getting ready to send it to the model. 
 
 **************************************************************************************************************************/
-function parseData(){
+function parseData(nassets, nloans){
 	// reads in all of the data entered by the user
 	// and creates necessary financial objects
 	// Returns all of the user's Financial stats
@@ -27,8 +27,8 @@ function parseData(){
 
 	// names of the id fields that get inserted into HTML
 	// are stored in "assetHtmlIds" and "loanHtmlIds"
-	var assetHtmlIds = nameBalances('asset',countBalances('asset'));
-	var loanHtmlIds = nameBalances('loan',countBalances('loan'));
+	var assetHtmlIds = nameBalances('asset',nassets);
+	var loanHtmlIds = nameBalances('loan',nloans);
 
 	//console.log('assetHtmlIds array:');
 	//console.log(assetHtmlIds);

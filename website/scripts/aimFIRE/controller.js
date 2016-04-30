@@ -45,7 +45,9 @@ $(document).ready(function(){
 function masterCalculate() {
 
 	// first parse the form
-	var userData = parseData();
+	var nassets = countBalances('asset');
+	var nloans = countBalances('loan');
+	var userData = parseData(nassets,nloans);
 
 	console.log('The Users data is:')
 	console.log(userData)
