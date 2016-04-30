@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Settings - aimFIRE</title>
+	
+	<!-- load common files  -->
+	<script type="text/javascript" src="scripts/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="scripts/common.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/common.css"/>
+	<!-- load page specific files  -->
+	<script type="text/javascript" src="scripts/userSettings.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/userSettings.css"/>
+
+</head>
+<body>
+
+	<div>
+		<h4>Blog Feed Settings</h4>
+		<h5>Filter Blog Posts</h5>
+		<h6>Include only blog posts from the following categories in my feed:</h6>
+		<label><input type="checkbox" value="Finance"/>Finance</label><br>
+		<label><input type="checkbox" value="Nutrition"/>Nutrition</label><br>
+		<label><input type="checkbox" value="Climbing"/>Climbing</label><br>
+		<label><input type="checkbox" value="Training"/>Training</label><br>
+		<label><input type="checkbox" value="Lifestyle"/>Lifestyle</label><br>
+	</div>
+
+	<div>
+		<h4>Email Settings</h4>
+		<h5></h5>
+		<h6>Opt in or out of any mailings:</h6>
+		<label><input type="checkbox" value="newPost"/>New Blog Post*</label><br>
+		<label><input type="checkbox" value="newTool"/>New Tool Released</label><br>
+		<label><input type="checkbox" value="newsletter"/>Newsletter</label><br>
+		<p>*You will only be notified of a blog post in your selected categories.</p>
+	</div>
+
+	<div>
+		<button id="updateSettings">Save my preferences</button>
+	</div>
+
+
+
+</body>
+</html>

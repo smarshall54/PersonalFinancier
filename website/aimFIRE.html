@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- load common files  -->
+	<script type="text/javascript" src="scripts/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="scripts/common.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/common.css"/>
+	<!-- load page specific files  -->
+	<script type="text/javascript" src="scripts/aimFIRE.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/aimFIRE.css"/>
+</head>
+<body>
+	
+	<div id="titleLine"><h1>aimFIRE</h1></div>
+	<div>
+		<h2>Enter your FIRE stats below:</h2>
+		<div>Your target portfolio value: $
+		<input type="number" value=500000 id="targetValue" tag="userStats"> </div>
+		<div>Your safe withdrawal rate: <input type="number" value=4 id="safeWithdrawRate" tag="userStats">%</div>
+		<div id="loan" tag="userStats">Your current debts:
+			<div><button id="addLoan">+Add Loan</button><button id="destroyLoan">-Remove Loan</button></div>
+			<!-- Table Headers -->
+			<table id="loanTable">
+				<tr>
+				<td><div class="fieldLabel">Name </div></td><td><div class="fieldLabel">Principal </div></td><td><div class="fieldLabel">Rate </div></td><td><div class="fieldLabel">StartDate </div></td><td><div class="fieldLabel">Min Payment </div></td>
+				</tr>
+				<!-- the follow is an example of a full loan input to be deleted later
+				<div id="loan1">
+					<input type="text" value="Loan 1" id="loan1Name" tag="userStats">
+					<input type="number" value=0 id="loan1Principal" tag="userStats">
+					<input type="number" value=0 id="loan1Rate" tag="userStats">
+					<input type="number" value=0 id="loan1Date" tag="userStats">
+					<input type="number" value=0 id="loan1minPay" tag="userStats">
+				</div>
+	
+				! done w. example -->
+			</table>
+		</div>
+
+		<div id="asset" tag="userStats">Your current assets:
+			<div><button id="addAsset">+Add Asset</button><button id="destroyAsset">-Remove Asset</button></div>
+			<table id="assetTable">
+				<tr><td>someheaders</td></tr>
+				<!-- assets will get inserted here -->
+			</table>
+		</div>
+		<div id="cashflow" tag="userStats">Your monthly cashflow:</div>
+			<input type="number" value=4000 id="usrCashFlow" tag="userStats">
+		<div id="expenses" tag="userStats">Your monthly expenses:</div>
+			<input type="number" value=2000 id="usrExpenses" tag="userStats">
+	
+		<div><button id="calculate">Calculate!</button></div>
+
+		<div id="formErrMsg"></div>
+	</div>
+
+</body>
+</html>

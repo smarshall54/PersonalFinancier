@@ -1,0 +1,43 @@
+MVC Design pattern for web app
+
+
+Model
+	does not know about view or controller
+
+	Holds data about the user
+
+
+
+
+View
+	pageview.js
+
+	- adds or removes table rows to the loan/asset tables
+	- displays the calculation result and graph
+
+
+
+Controller
+	* knows about model and view
+
+	- listens for some kind of event:
+
+	A) on page load
+		- initialize page load stuff
+			- right now, not doing much here.
+			- more important for when there is a user login process. not implemented yet.
+
+	B) when add/subtract asset or loan is clicked
+		- tell model to add/remove an asset/loan object
+		- tell view to add a new row to the table of assets/loans
+
+	C) when calculate is clicked
+
+		- collect all form data 
+		- submit it to the model
+		- tell the model to calculate the result
+		- tell the view to display the result
+
+
+
+

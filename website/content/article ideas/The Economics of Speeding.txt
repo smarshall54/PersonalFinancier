@@ -1,0 +1,21 @@
+The Economics of Speeding
+
+
+- cumulative probability chart of likelihood of being pulled over vs marginal speed increase
+- mins saved per mile travelled @ marginal mph over speed limit
+	- correct for increased fuel mileage!?
+- value of your time (cite YMOYL, chapter 7 give a re-read and show the maths in the article!)
+- estimate the cost of a speeding ticket including insurance increases, etc.
+- plot the optimal point at the intersection  of "dollar value of another minute of time" and "rate of speeding ticket acquisition"
+
+
+- show all graphs
+	- **tell the story** with graphs. dimensional analysis.
+- show all math (i.e. to convert cuml. prob. to cost)
+	- "prove" the story with the maths, i.e. just to show that it stands up to scrutiny.
+- cite all sources
+
+- reasearch data to get an estimate for the cuml. prob. curve for speeding
+- research data for how much fuel efficiency is lost for every mph over 30, every mph over 55, every mph over 65 and apply this as a piecewise linear
+
+- build spreadsheet to calculate it and post the file so users can input their own variables (like fine amounts for their state, person valuation of time, % on highway, city roads, country roads)

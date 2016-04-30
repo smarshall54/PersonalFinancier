@@ -1,0 +1,615 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"rates",
+				"rates"
+			],
+			[
+				"name",
+				"name"
+			],
+			[
+				"type",
+				"type"
+			],
+			[
+				"value",
+				"value"
+			],
+			[
+				"rate",
+				"rate"
+			],
+			[
+				"swr",
+				"swr"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 3946,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "styles/common.css",
+			"settings":
+			{
+				"buffer_size": 1491,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "styles/index.css",
+			"settings":
+			{
+				"buffer_size": 70,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/index.js",
+			"settings":
+			{
+				"buffer_size": 458,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/common.js",
+			"settings":
+			{
+				"buffer_size": 458,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "aimFIRE.html",
+			"settings":
+			{
+				"buffer_size": 2400,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "/*********************************************************************************************************\n*\n*		FINANCIAL OBJECT   \"MODEL\"\n*\n**********************************************************************************************************/\n\n	function FinObj(type,name,target,startValue,rate,startDate,minPay,payDate){\n		\n		//\"asset\", \"withdrawal\", \"windfall\"\n		this.type = \"loan\";\n\n		// my loan name 			\n		this.name = \"newLoan\"; 		\n\n		// default \"target account\" to modify the value of.\n		// 		in the case of a new loan or asset, the target\n		//		is itself, as the new loan/asset creates a new\n		// 		account. In the case of a Windfall or Withdrawal,\n		// 		the target must be a different account that you\n		// 		wish to deposit to or withdraw from\n		this.target = \"newLoan\";		\n\n		// starting value of the object; in the case of a loan\n		// 		or asset, this is the Principal amount\n		this.startValue = 0;			\n		\n		// interest rate of the financial object. could be\n		// 		expected return, interest rate, or 0 for \n		//		windfalls and withdrawals.\n		//		* would be interesting to add a feature to tie\n		//			this to a variable (such as the Prime Rate)\n		//			to support variable-rate loans.\n		this.rate = 0;\n\n		// the date on which the object applies. existing loans \n		// 		apply starting today, where a windfall might\n		// 		occur 29 months in the future\n		this.startDate = 0;		\n		\n		// the minimum payment you must make on this loan.\n		this.minPay = 0;				\n		\n		// the contractual due date of this loan.\n		// 		user can provide EITHER minpay or paydate and \n		// 		the object can calculate which one is needed\n		this.payDate = 0;	\n\n		// not user modified. this is calculated by the Algorithm\n		// 		and will be an array of the value of this asset\n		// 		at each time point in the simulation.\n		this.timeValue = [];	\n\n		// method that applies a payment to this object.\n		// 		modifies timeValue.\n		FinObj.prototype.pay = function(amount){\n\n			var iter = this.timeValue.length + 1;\n\n			if (this.timeValue.length == 0){\n				this.timeValue[0] = this.startValue;\n			}\n\n			\n			if (this.timeValue[iter-1]<amount) { \n				this.timeValue[iter] = 0;\n				var remainder = amount - this.timeValue[iter-1];\n			} else {\n				this.timeValue[iter] = this.timeValue[iter-1] - amount;\n				var remainder = 0;\n			}\n			\n			return remainder;\n\n		};  	\n		\n		// method that compounds interest on this object at\n		//		the end of the time period. modifies timeValue.\n		FinObj.prototype.compound = function(period){\n			\n					// FV = PV(1+r/n)^nt\n			var A = this.timeValue[this.timeValue.length] * (1+this.rate/100/period)\n\n			this.timeValue[this.timeValue.length] = A;\n			\n			return this.timeValue[this.timeValue.length];\n\n		}; \n\n		// method that returns an array of all the properties of the loan.\n		// it might not be possible to define a method inside the constructor function this way.\n		//     how to do it? google!\n		FinObj.prototype.datArr = function(){\n			var datArr = [];\n			datArr[0] = this.type;\n			datArr[1] = this.name;\n			datArr[2] = this.startValue;\n			datArr[3] = this.rate;\n			datArr[4] = this.startDate;\n\n			return datArr;\n		};\n	};\n\n/*********************************************************************************************************\n*\n*		DYNAMIC FORM MODIFICATION   \"VIEW\"\n*\n**********************************************************************************************************/\n\nfunction addLoanField(balanceType){\n	// creates a new set of text fields for a user to enter loan parameters.\n\n\n	var nloans = 0;\n	var nassets = 0;\n	// input validation\n	// only 2 valid inputs: \"loan\" and \"asset\"\n	if (balanceType==='loan') {\n		var ntrack = nloans;\n		console.log('detected loan type')\n\n	} else if (balanceType==='asset'){\n		var ntrack = nassets;\n		console.log('detected asset type')\n	} else {\n		console.log('choose loan or asset to add.')\n		return;\n	}\n	\n	ntrack = countBalances(balanceType);\n\n	// names the new loan based on # of existing loans\n	var newLoanId = balanceType+ntrack;\n	var newLoanValue = balanceType+' '+ntrack;\n	\n	// instead of this huge string, create a method under the finObj() called \"createInputFields\"\n	// 		will also need \"destroyInputFields\" and \"readInputFields\"\n	// function addLoanField should create a finObj that then creates its own fields and reads them in\n	var $loanFields = '<tr id=\"'+newLoanId+'\"><div id=\"'+newLoanId+'\">'+'<td><input type=\"text\" value=\"'+newLoanValue+'\" id=\"'+newLoanId+'Name\" class=\"userStats\"></td><td><input type=\"number\" value=0 id=\"'+newLoanId+'Principal\" class=\"userStats\"></td><td><input type=\"number\" value=0 id=\"'+newLoanId+'Rate\" class=\"userStats\"></td><td><input type=\"number\" value=0 id=\"'+newLoanId+'Date\" class=\"userStats\"></td><td><input type=\"number\" value=0 id=\"'+newLoanId+'MinPay\" class=\"userStats\"></td></div></tr>';\n\n\n	$('#'+balanceType+'Table').append($loanFields);\n\n	if (balanceType=='loan') {\n		nloans = ntrack;\n\n	} else if (balanceType=='asset'){\n		nloans = ntrack;\n	} else {\n		console.log('choose loan or asset to add.')\n		return;\n	}\n\n};\n\nfunction destroyLoanField(balanceType){\n	// removes the last set of text fields created by the user\n\n	var nloans = 0;\n	var nassets = 0;\n	// input validation\n	// only 2 valid inputs: \"loan\" and \"asset\"\n	if (balanceType==='loan') {\n		var ntrack = nloans;\n		console.log('detected loan type')\n\n	} else if (balanceType==='asset'){\n		var ntrack = nassets;\n		console.log('detected asset type')\n	} else {\n		console.log('choose loan or asset to destroy.')\n		return;\n	}\n\n	ntrack = countBalances(balanceType);\n\n	ntrack--;\n\n	// names the new loan based on # of existing loans\n	var newLoanId = balanceType+ntrack;\n\n	$(\"table#\"+balanceType+\"Table tr#\"+newLoanId+\"\").empty();\n	$(\"table#\"+balanceType+\"Table tr#\"+newLoanId+\"\").remove();\n\n};\n\n/*********************************************************************************************************\n*\n*		SUBROUTINES  \"VIEW\"\n*\n**********************************************************************************************************/\n\nfunction countBalances(balanceType){\n		// must go through all previous loan elements and determine the number/id of current loan\n		// and then modify the DOM element string to have different values\n\n		var ntrack = 0;\n		var loanElem = document.getElementById(balanceType+'Table').getElementsByTagName(\"tbody\")[0];\n	\n	// counts the # of direct child elements of 'balanceType' to know how many were already made\n	// FUNCTIONALIZE into \"countBalances\" since it is used here and in addLoanField()\n\n	for (var i=0; i<loanElem.childNodes.length;i++){\n		var node = loanElem.childNodes[i];\n		if (node.nodeType == Node.ELEMENT_NODE && node.nodeName == 'TR' && node.id == balanceType+ntrack){\n			ntrack++;\n		};\n	};\n\n	return ntrack;\n \n};\n\nfunction nameBalances(balanceType,ntrack){\n	// reads in all balances of type balanceType. ntrack tells how many of each type there are.\n	// returns [  ***************  ]\n\n	// generate array of loan names\n	// loan property field names\n	// Name // Principal // Rate // Date // MinPay\n	var propNames = [\"Name\",\"Principal\",\"Rate\",\"Date\",\"MinPay\"];\n	\n	// make an array of all the loan field IDs so we can use it later\n	// to iterate over to collect all of the input values by ID\n	var loanFieldNames = [];\n\n\n	for (var y = 0; y<ntrack; y++){\n		\n		//console.log(y)\n\n		var loanFieldRow = []; // initialize\n		for (var x = 0; x<propNames.length; x++){\n\n			loanFieldRow[x] = balanceType+y+propNames[x];\n\n			// console.log(loanFieldRow[x]);\n		};\n		//console.log('loanFieldRow');\n		//console.log(loanFieldRow);\n		loanFieldNames[y] = loanFieldRow;\n		//console.log('loanFieldNames['+y+']')\n		//console.log(loanFieldNames[y]);\n	};\n\n	//console.log('loanFieldNames');\n	//console.log(loanFieldNames);\n\n	return loanFieldNames;\n\n};\n\n/*********************************************************************************************************\n*\n*		FORM SUBMISSION\n*\n**********************************************************************************************************/\n\n\n/* \"CONTROLLER\" elements - it is calling the model and telling the view to update */\n\nfunction masterCalculate() {\n\n// first parse the form\nvar userData = parseData();\n\nconsole.log('The Users data is:')\nconsole.log(userData)\n\n// calculate the results\n\nvar results = calcTimeseries(userData);\n\n// draw the graph\n\ndrawGraph(results);\n\n};\n\n\n/*************************************************************************************************************************\n\n\"MODEL\" element - it is doing form validation, formatting it for the algorithm, and getting ready to send it to the model. \n\n**************************************************************************************************************************/\nfunction parseData(){\n	// reads in all of the data entered by the user\n	// and creates necessary financial objects\n	// Returns all of the user's Financial stats\n	\n\n\n	console.log('parsing data...');\n\n	targetValue = Number(document.getElementById(\"targetValue\").value);\n	swr = Number(document.getElementById(\"safeWithdrawRate\").value);\n	usrCashFlow = Number(document.getElementById(\"usrCashFlow\").value);\n	usrExpenses = Number(document.getElementById(\"usrExpenses\").value);\n\n	console.log('target portfolio value = '+targetValue);\n	console.log('usr SWR = '+swr);\n	console.log('usr Cash Flow = '+usrCashFlow);\n	console.log('usr Expenses = '+usrExpenses);\n\n\n	// names of the id fields that get inserted into HTML\n	// are stored in \"assetHtmlIds\" and \"loanHtmlIds\"\n	var assetHtmlIds = nameBalances('asset',countBalances('asset'));\n	var loanHtmlIds = nameBalances('loan',countBalances('loan'));\n\n	//console.log('assetHtmlIds array:');\n	//console.log(assetHtmlIds);\n\n	// retreive all data by ID and place into array containing a FinObj for each asset item.\n	var assetObjs = []; // initialize\n	for (var assetNum = 0; assetNum<assetHtmlIds.length;assetNum++){\n		\n		assetObjs[assetNum] = new FinObj()\n		assetObjs[assetNum].type = \"asset\";\n		assetObjs[assetNum].name = document.getElementById(assetHtmlIds[assetNum][0]).value;\n		assetObjs[assetNum].startValue = Number(document.getElementById(assetHtmlIds[assetNum][1]).value);\n		assetObjs[assetNum].rate = Number(document.getElementById(assetHtmlIds[assetNum][2]).value);\n		assetObjs[assetNum].startDate = Number(document.getElementById(assetHtmlIds[assetNum][3]).value);\n		assetObjs[assetNum].minPay = Number(document.getElementById(assetHtmlIds[assetNum][4]).value);\n\n		console.log(\"the type of the object property minPay is \")\n		console.log(typeof assetObjs[assetNum].minPay)\n	};\n\n	//console.log(assetObjs)\n\n	var loanObjs = []; // initialize\n	for (var loanNum = 0; loanNum<loanHtmlIds.length; loanNum++){\n		\n		loanObjs[loanNum] = new FinObj()\n		loanObjs[loanNum].type = \"loan\";\n		loanObjs[loanNum].name = document.getElementById(loanHtmlIds[loanNum][0]).value;\n		loanObjs[loanNum].startValue = Number(document.getElementById(loanHtmlIds[loanNum][1]).value);\n		loanObjs[loanNum].rate = Number(document.getElementById(loanHtmlIds[loanNum][2]).value);\n		loanObjs[loanNum].startDate = Number(document.getElementById(loanHtmlIds[loanNum][3]).value);\n		loanObjs[loanNum].minPay = Number(document.getElementById(loanHtmlIds[loanNum][4]).value);\n	};\n		var test = loanObjs[0].datArr(); // the method works! use obj.method() not just obj.method to call it.\nvar\n\n	\n	 userData = [targetValue, swr, usrCashFlow, usrExpenses, loanObjs, assetObjs];\n	return userData;\n\n};\n\n\n\n/****************************************************************************\n	\"MODEL\" element\n	should never call a \"view\" or \"controller\" function.\n	controller only calls functions from model and gets the return data\n*****************************************************************************/\n\nfunction calcTimeseries(userData){\n	// takes a UserStats object as the input containing a user's complete financial info\n	// returns time-series data for user's networth vs. month\n	\n\n	// unpack the user data\n\n	targetValue = userData[0];\n	swr = userData[1];\n	usrCashFlow = userData[2];\n	usrExpenses = userData[3];\n	loanObjArr = userData[4];\n	assetObjs = userData[5];\n\n	networth = 490000;  // should grab this from the UI\n						// 499k just for test\n\n\n	console.log(loanObjArr)\n\n\n	// step 1 infinite loop check (cashflow > minpays, minpays big enough?)\n	\n	// is your cashflow bigger than all your minimum payments?\n	var totalMinPay = 0; //initialize\n	var payment = [];\n	var period = 12; 	 // always just assume monthly compounding\n	var minPayFlag = 0;\n	var rates = [];\n\n	//iterate over all the loan objects to get some important data.\n	for (var x = 0; x<loanObjArr.length; x++){\n\n		// Validity Checks\n		// Can you cashflow cover the min payments?\n		totalMinPay = totalMinPay + loanObjArr[x].minPay;  // this works, but FinObj.minPay returns a string.\n														   // need to edit the function that stores it to be a number.\n		// should set an error flag here and have a separate function for displaying form errors... \n		// 		same for below. but that is for another day.\n\n		// Will the minpays ever get you out of debt?\n		payment[x] = ((loanObjArr[x].rate/100/period)*loanObjArr[x].startValue)/(1-Math.pow((1+loanObjArr[x].rate/100/period),-360));\n\n		if (payment[x] > loanObjArr[x].minPay){\n			minPayFlag = 1;\n		};\n\n		rates[x] = loanObjArr[x].rate;\n\n	};\n\n	// console.log('Min Payments are: ')\n	// console.log(payment)\n\n	// write some form errors to the error box.\n	var errMsgBox = document.getElementById(\"formErrMsg\");\n	errMsgBox.innerHTML = [];\n	if (totalMinPay > usrCashFlow)	{\n		errMsgBox.innerHTML += '<p>You do not have enough cash flow to get out of debt!</p>';\n	}\n	if (minPayFlag == 1) {\n		errMsgBox.innerHTML += '<p>One of your loans will take > 30 years to pay off!</p>';\n	}\n	console.log(\"Total Minimum Payment is \"+totalMinPay)\n\n	// step 2 initialize loop\n\n	// step 3 loop while networth < target portfolio value\n	while(networth < targetValue) {\n		// loop step 1 - sort for pay-down order\n\n		console.log(rates)\n		var avaRates = rates.slice(0);	// slice copies the array as a NEW ARRAY OBJECT. if you just do avaRates=rates, you are\n										// essentially copying a pointer to the array and sorting one will sort \"both\" arrays.\n\n		avaRates.sort( function(a,b) {\n			return b-a;\n		});\n\n		var payOrder = [];\n		for (var x = 0; x<avaRates.length;x++){\n			payOrder[x] = rates.indexOf(avaRates[x]);\n		};\n\n		// can now iterate over payOrder to get the index of loanObjArr so that the right loans are paid first.\n\n		console.log(payOrder)\n\n\n		var monthTotal = 2000;\n\n		networth += monthTotal;\n		console.log('Networth this iter = '+networth)\n	};\n\n		// loop step 2 - pay down, accumulate interest\n\n		var afterPay = [];  //initialize\n		var afterComp = [];\n\n		console.log(loanObjArr[0].timeValue)\n		for (var x in loanObjArr) {\n			\n			console.log('x this iter = '+x)\n			console.log('loan min pay = '+loanObjArr[x].minPay)\n\n			loanObjArr[x].pay(loanObjArr[x].minPay);\n			afterComp[x] = loanObjArr[x].compound(period);\n\n			console.log(afterComp[x])\n		};\n		console.log(loanObjArr[0].timeValue)\n\n		// loop step 3 - calculate networth (separate out equity?)\n\n\n	// just some dummy outputs for now\n	//var networth = [1000, 2000, 3000, 4000, s5000];\n\n	return networth;\n};\n\n\n\n// \"VIEW\" element\n\nfunction drawGraph(results){\n	console.log('I should be drawing a graph now.')\n};\n/*********************************************************************************************************\n*\n*		DOCUMENT ONLOAD  \"CONTROLLER\" element\n*\n**********************************************************************************************************/\n\n$(document).ready(function(){\n	\n// just some fuckery to see if the doc loaded properly.\n	$('h1').mouseover(function(){\n		$(this).fadeOut('slow');\n	});\n	$('h1').mouseleave(function(){\n		$(this).fadeIn('slow');\n	});\n	\n\n	// need to wrap a function in an anonymous function\n	// if it has parameters, otherwise it will execute\n	// the function on page load!\n	$('#addLoan').click(function(){addLoanField('loan');});\n	\n	$('#addAsset').click(function(){addLoanField('asset');});\n	\n	$('#destroyLoan').click(function(){destroyLoanField('loan');});\n	\n	$('#destroyAsset').click(function(){destroyLoanField('asset');});\n\n	$('#calculate').click(masterCalculate);\n\n  var firstObj = new FinObj();\n  firstObj.name=\"betterName\";\n  console.log(firstObj.name);\n});",
+			"file": "scripts/aimFIRE.js",
+			"file_size": 15916,
+			"file_write_time": 130969333251509604,
+			"settings":
+			{
+				"buffer_size": 16245,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "/*********************************************************************************************************\n*\n*		Currency Converter Coding Challenge\n*\n**********************************************************************************************************/\n\n/*********************************************************************************************************\n*\n*		DOCUMENT ONLOAD\n*\n**********************************************************************************************************/\n\n$(document).ready(function(){\n\n	$('#convert').click(convert);\n\n	$('#clear').click(clearHist);\n\n});\n\n\n/*********************************************************************************************************\n*\n*		Convert Function\n*\n**********************************************************************************************************/\n\nfunction convert(){\n\n	var inputs = validate();\n\n	convTable = [1, 0.65, 16.53, 65.75, 121.88];\n	fromInd = inputs.indexOf(inputs[1]);\n	toInd = inputs.indexOf(inputs[2]);\n\n	output = (convAmt/convTable[fromInd])*convTable[toInd];\n\n	document.getElementById(\"outAmt\").innerHTML = output;  // should go in controller!\n	// if this line goes in controller, then add a line like\n	// return output;\n\n	/* future functionality:\n		- round decimal places for nice display\n		- list history of all conversions\n		- button to clear history\n		- summarize conversion in output box including inputs\n			e.g. \"1 USD is worth 16 pesos!\"\n		- retreive real-time currency information from an API like\n			google finance, yahoo finance, currencylayer API, euro central bank feed, open source exchange rates API\n			this probably requires JSON\n	*/\n};\n\nfunction validate(){ // form validation belongs in model\n\n	convAmt = parseFloat(document.getElementById(\"inputValue\").value);\n	fromCurr = document.getElementById(\"fromCurr\").value;\n	toCurr = document.getElementById(\"toCurr\").value;\n		console.log(\"Converting \"+convAmt+\" \"+fromCurr+\" to \"+toCurr);\n\n\n\n	var formData = [convAmt, fromCurr, toCurr];\n\n	return formData;\n};\n\nfunction clearHist(){\n\n};",
+			"file": "/C/Users/Steve/Documents/git/coding-challenges/currencyConverter/scripts/index.js",
+			"file_size": 2085,
+			"file_write_time": 131065009916599558,
+			"settings":
+			{
+				"buffer_size": 2052,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "project notes/MVC framework for PF app",
+			"settings":
+			{
+				"buffer_size": 808,
+				"line_ending": "Windows",
+				"name": "MVC Design pattern for web app"
+			}
+		},
+		{
+			"file": "project notes/Code Projects and Components",
+			"settings":
+			{
+				"buffer_size": 3100,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 360.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/scripts/aimFIRE.js",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/blogroll.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/userSettings.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/userPage.html",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/privacy.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/datalog.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/articles.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/templatePage.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/disclaimer.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/content/article ideas/The Economics of Speeding.txt",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/content/The Economics of Speeding.txt",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/project notes/Code Projects and Components",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/scripts/index.js",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/styles/aimFIRE.css",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/about.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/archives.html",
+		"/C/Users/Steve/Documents/git/PersonalFinancier/website/index.html",
+		"/C/Users/Steve/Documents/git/website/styles/index.css",
+		"/C/Users/Steve/Documents/git/website/scripts/index.js",
+		"/C/Users/Steve/Documents/git/website/index.html",
+		"/C/Users/SMarshall/Desktop/Path To FI.txt",
+		"/C/Users/SMarshall/Documents/Design Engineering/1720/1720 Post Mortem.txt",
+		"/C/Users/SMarshall/Documents/Design Engineering/1377/Meeting Notes/6-6-2014 1377BA Ratiometry Trim Review Minutes.txt",
+		"/C/SteveProgs/Sublime Text 2.0.2/FAULT COMPS",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Minutes/initial_floor_plan_meeting_01162015",
+		"/C/Users/smarshall/Dropbox/Writings/Dirtbag Van Systems",
+		"/C/Users/smarshall/Dropbox/Writings/Dirtbag Calculations",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Minutes/Fault Test Notes 1-21-15",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Minutes/KickOffMeeting_12032014",
+		"/C/Users/smarshall/Dropbox/Writings/FI Budget",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Notes and ToDos/ACS710-II Feasibility Analysis_Thoughts.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Minutes/PreKickoffII_8142014.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1720/Minutes/PreKickoffI_872014.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/Dog Training Notes.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1363-4/BoschFA/Bosch FA Notes 7-17-14.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/oldPOFprofile.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/apartment room rent ad.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/1_Year_Training_Plan_7-2014-7-2015.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/IC616_interesting_features",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/BA/RatiometryTrim/1377BA Ratiometry Trim Design Review Minutes 6-6-14",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/CKL_LOGIC.v",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/2-6-14_1377_CTM.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1363-4/Datasheet Transient Linearity Calc Fcns.txt",
+		"/C/Users/smarshall/Dropbox/Writings/drmlog.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/2-6-14_1377_Sample_Release_Data_Review.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-30-14_1377_CTM.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-31-14 SE Silicon Review Meeting.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Self Notes & Tasks/1-21-14 Action Items for the week & notes",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-23-14_1377_CTM.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/Finance Thoughts 2.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/okcupid_woods_profile.txt",
+		"/C/Users/smarshall/Dropbox/Life Docs/Jan16-19_schedule.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-16-14_1377_FinalTest_Si_Review.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-14-14_1377_pre-si_review.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Meeting Notes/1-16-14_1377_CTM.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Self Notes & Tasks/ICC trim.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Self Notes & Tasks/Cyclic DAC Debug thoughts.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Self Notes & Tasks/1377 Master Eval Board features.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1377/Self Notes & Tasks/todo.txt",
+		"/C/Users/smarshall/Documents/1377/Meeting Notes/1-16-14_1377_CTM.txt",
+		"/C/Users/smarshall/Documents/Design Engineering/1-12-13_Matlab_RTL_tool_notes.txt",
+		"/C/Users/smarshall/Documents/1377/Meeting Notes/1377_pre-si_review_1-14-14.txt",
+		"/C/Users/smarshall/Documents/1377/Meeting Notes/1-9-13_1377_CTM.txt",
+		"/C/Users/smarshall/Dropbox/vacation nonplans",
+		"/C/Users/smarshall/Dropbox/HOW TO RESEARCH A CAR",
+		"/C/Users/smarshall/Dropbox/HOW TO INTERVIEW A ROOMMATE",
+		"/C/Users/smarshall/Dropbox/linux plans",
+		"/C/Users/smarshall/Dropbox/rfitness macro posts",
+		"/C/Users/smarshall/Dropbox/Design Specification Organization Techniques",
+		"/C/Users/smarshall/Dropbox/IP Reuse - LCBU Handbook Topic",
+		"/C/Users/smarshall/Dropbox/LCBU Design Handbook suggestions",
+		"/C/Users/smarshall/Dropbox/Cut Report at 175",
+		"/C/Users/smarshall/Dropbox/ERE_lifephil_options",
+		"/C/Users/smarshall/Dropbox/PT Meeting",
+		"/C/Users/smarshall/Dropbox/VerilogProjectTasks",
+		"/C/Users/smarshall/Dropbox/Books_to_pirate",
+		"/C/Users/smarshall/Dropbox/Lifting Program.txt",
+		"/C/Users/smarshall/Dropbox/LIST",
+		"/C/Users/smarshall/Documents/1377/Updates for Core Team 7-24-13",
+		"/C/Users/smarshall/Documents/1377/quick tasks 7-15-13",
+		"/C/Users/smarshall/Documents/1377/toplevel_sim_meeting_7-12-13",
+		"/C/Users/smarshall/Documents/1377/cyclic dac/Design Review Action Items - preDR",
+		"/C/Users/smarshall/Dropbox/Synth build",
+		"/C/Users/smarshall/Dropbox/QVOTRIM DR notes",
+		"/C/Users/smarshall/Dropbox/Fitness Game Pitch.txt",
+		"/C/Users/smarshall/Dropbox/Startup Idea.txt",
+		"/C/Users/smarshall/Documents/1377/cyclic_QVO/QVO Trim Layout Notes",
+		"/C/Users/smarshall/Dropbox/Writings/Summer Reading for the kids",
+		"/C/Users/smarshall/Dropbox/Engineering Library/Online Lectures and Link",
+		"/C/Users/smarshall/Dropbox/LetterToTravis.txt",
+		"/C/Users/smarshall/Dropbox/IC Startup Knowledge Requirements",
+		"/C/Users/smarshall/Dropbox/DSP self curriculum",
+		"/C/Users/smarshall/Documents/1377/cyclic_QVO/TB_QVO_TRIM_77_DCMATCH_RESULTS.txt",
+		"/C/Users/smarshall/Documents/1377/cyclic_QVO/thermometer_decoder.v",
+		"/C/Users/smarshall/Documents/1377/Clamps/clamp_specs_teamdiscussion_post",
+		"/C/Users/smarshall/Documents/1377/cyclic_QVO/DCMATCH_idealBEamp_temp.txt",
+		"/C/Users/smarshall/Downloads/Verilog.sublime-package"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"loans",
+			"assets",
+			"userStats"
+		],
+		"highlight": true,
+		"in_selection": true,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"loanHtmlIds",
+			"assetHtmlIds"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 3946,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2346,
+								2346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "styles/common.css",
+					"settings":
+					{
+						"buffer_size": 1491,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								573,
+								573
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "styles/index.css",
+					"settings":
+					{
+						"buffer_size": 70,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								70,
+								70
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/index.js",
+					"settings":
+					{
+						"buffer_size": 458,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								458,
+								458
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "scripts/common.js",
+					"settings":
+					{
+						"buffer_size": 458,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								254,
+								254
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 108.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "aimFIRE.html",
+					"settings":
+					{
+						"buffer_size": 2400,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "scripts/aimFIRE.js",
+					"settings":
+					{
+						"buffer_size": 16245,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15770,
+								15770
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 8424.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/C/Users/Steve/Documents/git/coding-challenges/currencyConverter/scripts/index.js",
+					"settings":
+					{
+						"buffer_size": 2052,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1715,
+								1715
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 378.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "project notes/MVC framework for PF app",
+					"settings":
+					{
+						"buffer_size": 808,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								274,
+								274
+							]
+						],
+						"settings":
+						{
+							"auto_name": "MVC Design pattern for web app",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "project notes/Code Projects and Components",
+					"settings":
+					{
+						"buffer_size": 3100,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								554,
+								554
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 264.0,
+	"status_bar_visible": true
+}
