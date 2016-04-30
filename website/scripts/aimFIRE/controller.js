@@ -14,23 +14,29 @@ $(document).ready(function(){
 		$(this).fadeIn('slow');
 	});
 	
+	// initialize object containing user data
+  	var user = new UserData();
+  	console.log(user.swr)
+  	console.log(user.name);
 
 	// need to wrap a function in an anonymous function
 	// if it has parameters, otherwise it will execute
 	// the function on page load!
-	$('#addLoan').click(function(){addLoanField('loan');});
+	$('#addLoan').click(function(){user.nloans = addLoanField('loan');
+									console.log(user.nloans);});
 	
-	$('#addAsset').click(function(){addLoanField('asset');});
+	$('#addAsset').click(function(){user.nassets = addLoanField('asset');});
 	
-	$('#destroyLoan').click(function(){destroyLoanField('loan');});
+	$('#destroyLoan').click(function(){user.nloans = destroyLoanField('loan');});
 	
-	$('#destroyAsset').click(function(){destroyLoanField('asset');});
+	$('#destroyAsset').click(function(){user.nassets = destroyLoanField('asset');});
 
-	$('#calculate').click(masterCalculate);
+	$('#calculate').click(function(){
+		user = masterCalculate(user);
+		console.log(user.name)
+	});
 
-  	var firstObj = new FinObj();
-  	firstObj.name="betterName";
-  	console.log(firstObj.name);
+
 });
 
 /*********************************************************************************************************
@@ -42,23 +48,33 @@ $(document).ready(function(){
 
 /* "CONTROLLER" elements - it is calling the model and telling the view to update */
 
-function masterCalculate() {
+function masterCalculate(userObj) {
 
 	// first parse the form
-	var nassets = countBalances('asset');
-	var nloans = countBalances('loan');
-	var userData = parseData(nassets,nloans);
+	var nassets = countBalances('asset'); // really nassets and nloans should be properties that remain
+	var nloans = countBalances('loan');   // updated in the model, and when the add/remove buttons are clicked,
+	//var userData = 
+	console.log(userObj)
+	userObj = parseData(userObj,nassets,nloans); // the controller should just update those values in the model,
+											// instead of counting them every time.
 
 	console.log('The Users data is:')
-	console.log(userData)
+	console.log(userObj)
+
+	
 
 	// calculate the results
 
-	var results = calcTimeseries(userData);
+	//var results = 
+
+	calcTimeseries(userObj);
 
 	// draw the graph
 
-	drawGraph(results);
-	printResults(results);
+	//drawGraph(results);
+	//printResults(results);
 
+	console.log(userObj.name);
+    userObj.name = 'steve';
+	return userObj;
 };

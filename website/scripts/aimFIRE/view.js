@@ -47,7 +47,7 @@ function addLoanField(balanceType){
 		console.log('choose loan or asset to add.')
 		return;
 	}
-
+	return ntrack;
 };
 
 function destroyLoanField(balanceType){
@@ -79,6 +79,8 @@ function destroyLoanField(balanceType){
 	$("table#"+balanceType+"Table tr#"+newLoanId+"").empty();
 	$("table#"+balanceType+"Table tr#"+newLoanId+"").remove();
 
+	return ntrack;
+
 };
 
 
@@ -88,6 +90,8 @@ function destroyLoanField(balanceType){
 *
 **********************************************************************************************************/
 
+
+// move this function into model and call it everytime the controller updates the # of fields
 function countBalances(balanceType){
 		// must go through all previous loan elements and determine the number/id of current loan
 		// and then modify the DOM element string to have different values

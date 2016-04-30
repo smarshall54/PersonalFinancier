@@ -5,7 +5,7 @@
 "MODEL" element - it is doing form validation, formatting it for the algorithm, and getting ready to send it to the model. 
 
 **************************************************************************************************************************/
-function parseData(nassets, nloans){
+function parseData(userObject, nassets, nloans){
 	// reads in all of the data entered by the user
 	// and creates necessary financial objects
 	// Returns all of the user's Financial stats
@@ -14,15 +14,15 @@ function parseData(nassets, nloans){
 
 	console.log('parsing data...');
 
-	targetValue = Number(document.getElementById("targetValue").value);
-	swr = Number(document.getElementById("safeWithdrawRate").value);
-	usrCashFlow = Number(document.getElementById("usrCashFlow").value);
-	usrExpenses = Number(document.getElementById("usrExpenses").value);
+	tV = Number(document.getElementById("targetValue").value);
+	rt = Number(document.getElementById("safeWithdrawRate").value);
+	uCF = Number(document.getElementById("usrCashFlow").value);
+	uEx = Number(document.getElementById("usrExpenses").value);
 
-	console.log('target portfolio value = '+targetValue);
-	console.log('usr SWR = '+swr);
-	console.log('usr Cash Flow = '+usrCashFlow);
-	console.log('usr Expenses = '+usrExpenses);
+	console.log('target portfolio value = '+tV);
+	console.log('usr SWR = '+rt);
+	console.log('usr Cash Flow = '+uCF);
+	console.log('usr Expenses = '+uEx);
 
 
 	// names of the id fields that get inserted into HTML
@@ -34,40 +34,45 @@ function parseData(nassets, nloans){
 	//console.log(assetHtmlIds);
 
 	// retreive all data by ID and place into array containing a FinObj for each asset item.
-	var assetObjs = []; // initialize
+	var aObjs = []; // initialize
 	for (var assetNum = 0; assetNum<assetHtmlIds.length;assetNum++){
 		
-		assetObjs[assetNum] = new FinObj()
-		assetObjs[assetNum].type = "asset";
-		assetObjs[assetNum].name = document.getElementById(assetHtmlIds[assetNum][0]).value;
-		assetObjs[assetNum].startValue = Number(document.getElementById(assetHtmlIds[assetNum][1]).value);
-		assetObjs[assetNum].rate = Number(document.getElementById(assetHtmlIds[assetNum][2]).value);
-		assetObjs[assetNum].startDate = Number(document.getElementById(assetHtmlIds[assetNum][3]).value);
-		assetObjs[assetNum].minPay = Number(document.getElementById(assetHtmlIds[assetNum][4]).value);
+		aObjs[assetNum] = new FinObj()
+		aObjs[assetNum].type = "asset";
+		aObjs[assetNum].name = document.getElementById(assetHtmlIds[assetNum][0]).value;
+		aObjs[assetNum].startValue = Number(document.getElementById(assetHtmlIds[assetNum][1]).value);
+		aObjs[assetNum].rate = Number(document.getElementById(assetHtmlIds[assetNum][2]).value);
+		aObjs[assetNum].startDate = Number(document.getElementById(assetHtmlIds[assetNum][3]).value);
+		aObjs[assetNum].minPay = Number(document.getElementById(assetHtmlIds[assetNum][4]).value);
 
 		console.log("the type of the object property minPay is ")
-		console.log(typeof assetObjs[assetNum].minPay)
+		console.log(typeof aObjs[assetNum].minPay)
 	};
 
 	//console.log(assetObjs)
 
-	var loanObjs = []; // initialize
+	var lObjs = []; // initialize
 	for (var loanNum = 0; loanNum<loanHtmlIds.length; loanNum++){
 		
-		loanObjs[loanNum] = new FinObj()
-		loanObjs[loanNum].type = "loan";
-		loanObjs[loanNum].name = document.getElementById(loanHtmlIds[loanNum][0]).value;
-		loanObjs[loanNum].startValue = Number(document.getElementById(loanHtmlIds[loanNum][1]).value);
-		loanObjs[loanNum].rate = Number(document.getElementById(loanHtmlIds[loanNum][2]).value);
-		loanObjs[loanNum].startDate = Number(document.getElementById(loanHtmlIds[loanNum][3]).value);
-		loanObjs[loanNum].minPay = Number(document.getElementById(loanHtmlIds[loanNum][4]).value);
+		lObjs[loanNum] = new FinObj()
+		lObjs[loanNum].type = "loan";
+		lObjs[loanNum].name = document.getElementById(loanHtmlIds[loanNum][0]).value;
+		lObjs[loanNum].startValue = Number(document.getElementById(loanHtmlIds[loanNum][1]).value);
+		lObjs[loanNum].rate = Number(document.getElementById(loanHtmlIds[loanNum][2]).value);
+		lObjs[loanNum].startDate = Number(document.getElementById(loanHtmlIds[loanNum][3]).value);
+		lObjs[loanNum].minPay = Number(document.getElementById(loanHtmlIds[loanNum][4]).value);
 	};
-		var test = loanObjs[0].datArr(); // the method works! use obj.method() not just obj.method to call it.
-var
-
+		var test = lObjs[0].datArr(); // the method works! use obj.method() not just obj.method to call it.
 	
-	 userData = [targetValue, swr, usrCashFlow, usrExpenses, loanObjs, assetObjs];
-	return userData;
+	 //var userData = [targetValue, swr, usrCashFlow, usrExpenses, loanObjs, assetObjs];
+	 userObject.targetValue = tV;
+	 userObject.swr = rt;
+	 userObject.usrCashFlow = uCF;
+	 userObject.usrExpenses = uEx;
+	 userObject.loanObjs = lObjs;
+	 userObject.assetObjs = aObjs;
+	
+	return userObject;
 
 };
 

@@ -103,31 +103,48 @@
 		};
 	};
 
+
+/****************************************************************************
+	
+	UserData object. Keeps up with user data entered on the page.
+
+*****************************************************************************/	
+function UserData(){ //targetValue, swr, usrCashFlow, usrExpenses, loanObjs, assetObjs, nloans, nassets
+	this.targetValue = 0;
+	this.swr = 0;
+	this.usrCashFlow = 0;
+	this.usrExpenses = 0;
+	this.loanObjs = [];
+	this.assetObjs = [];
+	this.nloans = 0;
+	this.nassets = 0;
+	this.name = 'cookiemonster';
+};
 /****************************************************************************
 	"MODEL" element
 	should never call a "view" or "controller" function.
 	controller only calls functions from model and gets the return data
 *****************************************************************************/
 
-function calcTimeseries(userData){
+function calcTimeseries(user){
 	// takes a UserStats object as the input containing a user's complete financial info
 	// returns time-series data for user's networth vs. month
 	
 
 	// unpack the user data
-
-	targetValue = userData[0];
-	swr = userData[1];
-	usrCashFlow = userData[2];
-	usrExpenses = userData[3];
-	loanObjArr = userData[4];
-	assetObjs = userData[5];
-
+/*
+	targetValue = user[0];
+	swr = user[1];
+	usrCashFlow = user[2];
+	usrExpenses = user[3];
+	loanObjArr = user[4];
+	assetObjs = user[5];
+*/
 	networth = 490000;  // should grab this from the UI
 						// 499k just for test
 
 
-	console.log(loanObjArr)
+	console.log(user.loanObjs)
 
 
 	// step 1 infinite loop check (cashflow > minpays, minpays big enough?)
@@ -140,23 +157,23 @@ function calcTimeseries(userData){
 	var rates = [];
 
 	//iterate over all the loan objects to get some important data.
-	for (var x = 0; x<loanObjArr.length; x++){
+	for (var x = 0; x<user.loanObjs.length; x++){
 
 		// Validity Checks
 		// Can you cashflow cover the min payments?
-		totalMinPay = totalMinPay + loanObjArr[x].minPay;  // this works, but FinObj.minPay returns a string.
+		totalMinPay = totalMinPay + user.loanObjs[x].minPay;  // this works, but FinObj.minPay returns a string.
 														   // need to edit the function that stores it to be a number.
 		// should set an error flag here and have a separate function for displaying form errors... 
 		// 		same for below. but that is for another day.
 
 		// Will the minpays ever get you out of debt?
-		payment[x] = ((loanObjArr[x].rate/100/period)*loanObjArr[x].startValue)/(1-Math.pow((1+loanObjArr[x].rate/100/period),-360));
+		payment[x] = ((user.loanObjs[x].rate/100/period)*user.loanObjs[x].startValue)/(1-Math.pow((1+user.loanObjs[x].rate/100/period),-360));
 
-		if (payment[x] > loanObjArr[x].minPay){
+		if (payment[x] > user.loanObjs[x].minPay){
 			minPayFlag = 1;
 		};
 
-		rates[x] = loanObjArr[x].rate;
+		rates[x] = user.loanObjs[x].rate;
 
 	};
 
@@ -177,7 +194,7 @@ function calcTimeseries(userData){
 	// step 2 initialize loop
 
 	// step 3 loop while networth < target portfolio value
-	while(networth < targetValue) {
+	while(networth < user.targetValue) {
 		// loop step 1 - sort for pay-down order
 
 		console.log(rates)
@@ -209,18 +226,18 @@ function calcTimeseries(userData){
 		var afterPay = [];  //initialize
 		var afterComp = [];
 
-		console.log(loanObjArr[0].timeValue)
-		for (var x in loanObjArr) {
+		console.log(user.loanObjs[0].timeValue)
+		for (var x in user.loanObjs) {
 			
 			console.log('x this iter = '+x)
-			console.log('loan min pay = '+loanObjArr[x].minPay)
+			console.log('loan min pay = '+user.loanObjs[x].minPay)
 
-			loanObjArr[x].pay(loanObjArr[x].minPay);
-			afterComp[x] = loanObjArr[x].compound(period);
+			user.loanObjs[x].pay(user.loanObjs[x].minPay);
+			afterComp[x] = user.loanObjs[x].compound(period);
 
 			console.log(afterComp[x])
 		};
-		console.log(loanObjArr[0].timeValue)
+		console.log(user.loanObjs[0].timeValue)
 
 		// loop step 3 - calculate networth (separate out equity?)
 
