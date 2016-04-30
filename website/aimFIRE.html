@@ -6,7 +6,15 @@
 	<script type="text/javascript" src="scripts/common.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles/common.css"/>
 	<!-- load page specific files  -->
-	<script type="text/javascript" src="scripts/aimFIRE.js"></script>
+	<!--<script type="text/javascript" src="scripts/aimFIRE.js"></script>-->
+		<!-- don't use this old script any more... point to the broken out files -->
+	
+	<script type="text/javascript" src="scripts/aimFIRE/controller.js"></script>
+	
+	<!--  instead of listing them manually here, could also load these in the document.onload section of controller.js. but this works for now. -->
+	<script type="text/javascript" src="scripts/aimFIRE/view.js"></script>
+	<script type="text/javascript" src="scripts/aimFIRE/model-businesslogic.js"></script>
+	<script type="text/javascript" src="scripts/aimFIRE/model-servicelogic.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles/aimFIRE.css"/>
 </head>
 <body>
