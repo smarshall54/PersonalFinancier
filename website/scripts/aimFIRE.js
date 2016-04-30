@@ -1,6 +1,6 @@
 /*********************************************************************************************************
 *
-*		FINANCIAL OBJECT
+*		FINANCIAL OBJECT   "MODEL"
 *
 **********************************************************************************************************/
 
@@ -103,7 +103,7 @@
 
 /*********************************************************************************************************
 *
-*		DYNAMIC FORM MODIFICATION
+*		DYNAMIC FORM MODIFICATION   "VIEW"
 *
 **********************************************************************************************************/
 
@@ -186,7 +186,7 @@ function destroyLoanField(balanceType){
 
 /*********************************************************************************************************
 *
-*		SUBROUTINES
+*		SUBROUTINES  "VIEW"
 *
 **********************************************************************************************************/
 
@@ -210,6 +210,11 @@ function countBalances(balanceType){
 	return ntrack;
  
 };
+
+
+/******************************
+Actually form input, so this is MODEL (service layer)
+*******************************/
 
 function nameBalances(balanceType,ntrack){
 	// reads in all balances of type balanceType. ntrack tells how many of each type there are.
@@ -256,6 +261,9 @@ function nameBalances(balanceType,ntrack){
 *
 **********************************************************************************************************/
 
+
+/* "CONTROLLER" elements - it is calling the model and telling the view to update */
+
 function masterCalculate() {
 
 // first parse the form
@@ -274,6 +282,12 @@ drawGraph(results);
 
 };
 
+
+/*************************************************************************************************************************
+
+"MODEL" element - it is doing form validation, formatting it for the algorithm, and getting ready to send it to the model. 
+
+**************************************************************************************************************************/
 function parseData(){
 	// reads in all of the data entered by the user
 	// and creates necessary financial objects
@@ -340,6 +354,13 @@ var
 
 };
 
+
+
+/****************************************************************************
+	"MODEL" element
+	should never call a "view" or "controller" function.
+	controller only calls functions from model and gets the return data
+*****************************************************************************/
 
 function calcTimeseries(userData){
 	// takes a UserStats object as the input containing a user's complete financial info
@@ -463,12 +484,16 @@ function calcTimeseries(userData){
 	return networth;
 };
 
+
+
+// "VIEW" element
+
 function drawGraph(results){
 	console.log('I should be drawing a graph now.')
 };
 /*********************************************************************************************************
 *
-*		DOCUMENT ONLOAD
+*		DOCUMENT ONLOAD  "CONTROLLER" element
 *
 **********************************************************************************************************/
 
