@@ -32,7 +32,7 @@ $(document).ready(function(){
 	$('#destroyAsset').click(function(){user.nassets = destroyLoanField('asset');});
 
 	$('#calculate').click(function(){
-		user = masterCalculate(user);
+		user = masterCalculate(user);  // fucked up variable scope?
 		console.log(user.name)
 	});
 
@@ -61,7 +61,13 @@ function masterCalculate(userObj) {
 	console.log('The Users data is:')
 	console.log(userObj)
 
-	
+	console.log('The Users Net Assets are:')
+	console.log(userObj.netassets())
+
+	console.log('The Users Net Loans are:')
+	console.log(userObj.netloans())
+
+	console.log('The Users Networth is: '+userObj.calcNw())
 
 	// calculate the results
 
@@ -74,7 +80,6 @@ function masterCalculate(userObj) {
 	//drawGraph(results);
 	//printResults(results);
 
-	console.log(userObj.name);
-    userObj.name = 'steve';
+	console.log(userObj);
 	return userObj;
 };

@@ -50,13 +50,25 @@
 		// not user modified. this is calculated by the Algorithm
 		// 		and will be an array of the value of this asset
 		// 		at each time point in the simulation.
-		this.timeValue = [];	
+		this.timeValue = [this.startValue];	
+
+		// monthly compounding... do not change this!
+		this.compPer = 12;
+
+		FinObj.prototype.init = function(){
+			this.timeValue = [this.startValue];
+		};
+
+		// returns the value of the object at the most recent time point
+		FinObj.prototype.currentVal = function(){
+			return this.timeValue[this.timeValue.length-1];
+		};
 
 		// method that applies a payment to this object.
 		// 		modifies timeValue.
 		FinObj.prototype.pay = function(amount){
 
-			var iter = this.timeValue.length + 1;
+			var iter = this.timeValue.length; // don't need +1 due to 0 index nature of arrays!
 
 			if (this.timeValue.length == 0){
 				this.timeValue[0] = this.startValue;
@@ -118,7 +130,49 @@ function UserData(){ //targetValue, swr, usrCashFlow, usrExpenses, loanObjs, ass
 	this.assetObjs = [];
 	this.nloans = 0;
 	this.nassets = 0;
+	this.networth = 0;
 	this.name = 'cookiemonster';
+
+	UserData.prototype.netassets = function(){
+		// adds up the sum of all assets belonging to the user
+		// at the current (latest) time point.
+		var sum = 0; //initialize
+		for (var x in this.assetObjs){
+			var len = this.assetObjs[x].timeValue.length;
+			sum += this.assetObjs[x].timeValue[len-1];
+		}
+		return sum;
+	};
+
+	UserData.prototype.netloans = function(){
+		// adds up the sum of all assets belonging to the user
+		// at the current (latest) time point.
+		var sum = 0; //initialize
+		for (var x in this.loanObjs){
+			var len = this.loanObjs[x].timeValue.length;
+			sum += this.loanObjs[x].timeValue[len-1];
+		}
+		return sum;
+	};
+
+	UserData.prototype.calcNw = function(){
+		this.networth = this.netassets() - this.netloans();
+		return this.networth;
+	};
+
+	UserData.prototype.iter = function(){
+		// iterates one financial period on all loans
+	};
+
+	UserData.prototype.check = function(){
+		// checks networth against targets to see if we can stop
+	};
+
+	UserData.prototype.cashflow = function(){
+		// submethod of iter
+		// allocates user's available cashflow among loans; determines pay order.
+	};
+
 };
 /****************************************************************************
 	"MODEL" element
@@ -140,11 +194,11 @@ function calcTimeseries(user){
 	loanObjArr = user[4];
 	assetObjs = user[5];
 */
-	networth = 490000;  // should grab this from the UI
-						// 499k just for test
+	var networth = user.networth;
+						
 
 
-	console.log(user.loanObjs)
+	//console.log(user.loanObjs)
 
 
 	// step 1 infinite loop check (cashflow > minpays, minpays big enough?)
@@ -197,7 +251,7 @@ function calcTimeseries(user){
 	while(networth < user.targetValue) {
 		// loop step 1 - sort for pay-down order
 
-		console.log(rates)
+		// console.log(rates)
 		var avaRates = rates.slice(0);	// slice copies the array as a NEW ARRAY OBJECT. if you just do avaRates=rates, you are
 										// essentially copying a pointer to the array and sorting one will sort "both" arrays.
 
@@ -205,26 +259,62 @@ function calcTimeseries(user){
 			return b-a;
 		});
 
+		// determine the Order of payments
 		var payOrder = [];
 		for (var x = 0; x<avaRates.length;x++){
 			payOrder[x] = rates.indexOf(avaRates[x]);
 		};
 
 		// can now iterate over payOrder to get the index of loanObjArr so that the right loans are paid first.
+		console.log('The pay order is: '+payOrder)
+		//console.log(payOrder)
 
-		console.log(payOrder)
-
-
+		// determine the Amount of each payment
 		var monthTotal = 2000;
 
+			// see where all the money goes
+		for (var x in payOrder){
+			monthTotal -= user.loanObjs[payOrder[x]].minPay;	
+		}
+			
+			console.log('The extra amount left for the month is '+monthTotal)
+
+		// now actually pay them
+		var remainder = 0; //init
+		var afterComp = [];
+		var lastPaid = false;
+		for (var x in payOrder){
+			
+			var min = user.loanObjs[payOrder[x]].minPay;
+			var value = user.loanObjs[payOrder[x]].currentVal();
+			console.log(value)
+
+			if (!(lastPaid) && value>0){ // if it's first in the pay order, it gets priority or 100% of remaining funds.
+				var payment = min+monthTotal+remainder;
+			} else if(value==0){
+				var payment = 0;
+			} else {
+				var payment =  min+remainder;
+			}
+
+			remainder = user.loanObjs[payOrder[x]].pay(payment);
+			afterComp[x] = user.loanObjs[x].compound(user.loanObjs[payOrder[x]].compPer);
+
+			if (afterComp[x]=0){
+				lastPaid = true;
+			}
+
+			console.log('number of iterations so far: '+(user.loanObjs[payOrder[x]].timeValue.length-1))
+			console.log('loan '+user.loanObjs[payOrder[x]].name+' is now worth '+user.loanObjs[payOrder[x]].timeValue[user.loanObjs[payOrder[x]].timeValue.length-1])
+		}
 		networth += monthTotal;
 		console.log('Networth this iter = '+networth)
 	};
 
 		// loop step 2 - pay down, accumulate interest
 
-		var afterPay = [];  //initialize
-		var afterComp = [];
+		/*var afterPay = [];  //initialize
+		
 
 		console.log(user.loanObjs[0].timeValue)
 		for (var x in user.loanObjs) {
@@ -233,11 +323,11 @@ function calcTimeseries(user){
 			console.log('loan min pay = '+user.loanObjs[x].minPay)
 
 			user.loanObjs[x].pay(user.loanObjs[x].minPay);
-			afterComp[x] = user.loanObjs[x].compound(period);
+			afterComp[x] = user.loanObjs[x].compound(this.compPer);
 
 			console.log(afterComp[x])
 		};
-		console.log(user.loanObjs[0].timeValue)
+		console.log(user.loanObjs[0].timeValue)*/
 
 		// loop step 3 - calculate networth (separate out equity?)
 

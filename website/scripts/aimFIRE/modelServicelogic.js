@@ -44,6 +44,7 @@ function parseData(userObject, nassets, nloans){
 		aObjs[assetNum].rate = Number(document.getElementById(assetHtmlIds[assetNum][2]).value);
 		aObjs[assetNum].startDate = Number(document.getElementById(assetHtmlIds[assetNum][3]).value);
 		aObjs[assetNum].minPay = Number(document.getElementById(assetHtmlIds[assetNum][4]).value);
+		aObjs[assetNum].init();
 
 		console.log("the type of the object property minPay is ")
 		console.log(typeof aObjs[assetNum].minPay)
@@ -61,6 +62,7 @@ function parseData(userObject, nassets, nloans){
 		lObjs[loanNum].rate = Number(document.getElementById(loanHtmlIds[loanNum][2]).value);
 		lObjs[loanNum].startDate = Number(document.getElementById(loanHtmlIds[loanNum][3]).value);
 		lObjs[loanNum].minPay = Number(document.getElementById(loanHtmlIds[loanNum][4]).value);
+		lObjs[loanNum].init();
 	};
 		var test = lObjs[0].datArr(); // the method works! use obj.method() not just obj.method to call it.
 	
